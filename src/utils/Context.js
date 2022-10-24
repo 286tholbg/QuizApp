@@ -9,7 +9,7 @@ function ContextProvider({children}){
     const [showResults, setShowResults] = useState(false)
 
     const [formData, setFormData] = useState({
-        amount: 6,
+        amount: 5,
         category: "",
         difficulty: "",
         type: ""
@@ -65,7 +65,7 @@ function ContextProvider({children}){
 
     function endQuiz(){
         setFormData({
-            amount: 6,
+            amount: 5,
             category: "",
             difficulty: "",
             type: ""

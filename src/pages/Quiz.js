@@ -35,7 +35,7 @@ function Quiz() {
                 {!showResults && <button className="check-answers-btn" onClick={checkAnswers}>Check Answers</button>}
                 {showResults && <div className="result-container">
                     <h3 className="end-message">You scored {countCorrectAnswers()}/{formData.amount} correct answers</h3>
-                    <Link className="play-again-btn" to="/" onClick={endQuiz}>Play Again</Link>
+                    <Link className="play-again-btn" to="/" onClick={() => endQuiz()}>Play Again</Link>
                 </div>}
             </div>
         </div>
