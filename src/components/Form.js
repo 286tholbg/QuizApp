@@ -40,7 +40,7 @@ function Form(){
                     type="number"
                     id="amount" 
                     name="amount"
-                    min="6"
+                    min="5"
                     max="50"
                     placeholder="Number of questions"
                     defaultValue={formData.amount}
