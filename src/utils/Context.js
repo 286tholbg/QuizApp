@@ -1,9 +1,13 @@
-import React, {createContext, useState, useContext, useEffect} from "react"
+import React, {createContext, useState, useContext, useEffect, useTransition} from "react"
+import Questions from '../components/Questions'
 import {nanoid} from 'nanoid'
 const Context = createContext()
 
 function ContextProvider({children}){
     const [questions, setQuestiosn] = useState([])
+    const [userAnswers, setUserAnswers] = useState([])
+    const [showResults, setShowResults] = useState(false)
+
     const [formData, setFormData] = useState({
         amount: 6,
         category: "",
@@ -26,32 +30,60 @@ function ContextProvider({children}){
             }
         })
     }
-
-    console.log(formData)
-    // https://opentdb.com/api.php?amount=6&category=9&difficulty=medium&type=multiple
     useEffect(() => {
         fetch(API_URL)
             .then(res => res.json())
             .then(data => {
                 return setQuestiosn(data.results.map(item => {
-                    return {...item, id: nanoid(), isSelected: false}
+                    return {
+                        ...item, 
+                        id: nanoid(),
+                    }
                 }))
             })
     }, [formData])
+    
+    function handleClick(questionId, value, correctAnswer){
+        const savedUserAnswer = userAnswers.find(item => item.questionId === questionId)
+        setUserAnswers(prevAnswers => {
+            return(savedUserAnswer) ? 
+                prevAnswers.map(item => {
+                    return item.questionId === questionId ? 
+                    {...item, chosenAnswer: value } : item
+                }) :
+                [...prevAnswers, {questionId: questionId, correctAnswer: correctAnswer, chosenAnswer: value}]
+        })
+    }
 
-    // function startQuiz(){
-    //     setFormData({
-    //         amount: 6,
-    //         category: "",
-    //         difficulty: "",
-    //         type: ""
-    //     })
-    // }
-    console.log(questions)
+    function checkAnswers() {
+        setShowResults(prev => !prev)
+    }
+    function countCorrectAnswers() {
+        const correct = userAnswers.filter(item => item.correctAnswer === item.chosenAnswer)
+        return correct.length
+    }
+
+    function endQuiz(){
+        setFormData({})
+    }
 
     return (
-        <Context.Provider value={{formData, questions, handleChange}}>
-            {children}
+        <Context.Provider value={
+            {
+                formData, 
+                questions,
+                userAnswers,
+                showResults,
+                countCorrectAnswers,
+                checkAnswers,
+                setShowResults,
+                handleClick,
+                handleChange,
+                setUserAnswers,
+                endQuiz
+            }
+        }>
+        {children}
         </Context.Provider>
     )
 }
