@@ -64,7 +64,12 @@ function ContextProvider({children}){
     }
 
     function endQuiz(){
-        setFormData({})
+        setFormData({
+            amount: 6,
+            category: "",
+            difficulty: "",
+            type: ""
+        })
     }
 
     return (
